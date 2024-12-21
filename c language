@@ -366,5 +366,165 @@ int index = 0; // Storing first occurence index
 }
                  
                  
-          
-                 
+          //search insert position
+int searchInsert(int* nums, int numsSize, int target) {
+    
+int low = 0;
+    int high = numsSize - 1;
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (nums[mid] == target) {
+            return mid; 
+        }
+        if (nums[mid] < target) {
+            low = mid + 1;  
+        } else {
+            high = mid - 1; 
+        }
+    }
+    
+    return low;
+} 
+//length of last word
+int lengthOfLastWord(char* s) {
+    
+int len = 1;
+    for(int i=1; s[i]; i++){
+        if(s[i] == ' ') continue;
+        if(s[i-1] == ' ') len = 0;
+        len++;
+    }
+    return len;}
+//remove duplicates from sorted list
+struct ListNode* deleteDuplicates(struct ListNode* head){
+    struct ListNode* new_list = head;
+    struct ListNode* temp = head;
+    while (temp != NULL && temp->next != NULL) {
+        if (temp->val == temp->next->val) {
+            temp->next = temp->next->next;
+        } else {
+            temp = temp->next;
+        }
+    }
+    return new_list;
+}
+
+//symmetric tree
+bool isSymmetricHelp(struct TreeNode* left, struct TreeNode* right) {
+    if (left == NULL || right == NULL) {
+        return left == right;
+    }
+    if (left->val != right->val) {
+        return false;
+    }
+
+    return isSymmetricHelp(left->left, right->right) && isSymmetricHelp(left->right, right->left);
+}
+
+bool isSymmetric(struct TreeNode* root) {
+    return root == NULL || isSymmetricHelp(root->left, root->right);
+}
+
+\\longest sustring without repeating characters
+int lengthOfLongestSubstring(char* s) {
+    if (!s || !*s) // Check if the string is empty
+        return 0;
+    
+    int charIndexMap[256]; // Assuming ASCII characters
+    memset(charIndexMap, -1, sizeof(charIndexMap)); // Initialize array with -1
+    
+    int maxLength = 0;
+    int startIndex = 0;
+    int i;
+    
+    for (i = 0; s[i] != '\0'; i++) {
+        // If the character is already in the map and its index is after the start index of the current substring,
+        // update the start index to the index after the last occurrence of the character
+        if (charIndexMap[s[i]] != -1 && charIndexMap[s[i]] >= startIndex) {
+            startIndex = charIndexMap[s[i]] + 1;
+        }
+        
+        // Update the index of the current character
+        charIndexMap[s[i]] = i;
+        
+        // Update the maximum length if the current substring is longer
+        if (i - startIndex + 1 > maxLength) {
+            maxLength = i - startIndex + 1;
+        }
+    }
+    
+    return maxLength;
+}
+
+  \\divide two integers
+int divide(int dividend, int divisor) {
+return (dividend == -2147483648 && divisor == -1)? INT_MAX:dividend/divisor;
+}
+
+\\merge sorted array
+void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n) {
+    int p1=m-1;
+    int p2=n-1;
+    int p=m+n-1;
+    while(p1>=0 && p2>=0){
+        if(nums1[p1]>nums2[p2])
+            nums1[p--]=nums1[p1--];
+        else
+        nums1[p--]=nums2[p2--];
+    }
+    while(p2>=0)
+     nums1[p--]=nums2[p2--];
+}
+// substring with concatenation
+int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
+    int nwords = 0, trieLen = 1, wordLen = strlen(words[0]), sLen = strlen(s);
+    int counts[wordsSize + 1], countMap[wordLen * wordsSize + 1], trie[wordLen * wordsSize][26];
+    memset(counts, 0, sizeof counts);
+    memset(countMap, 0, sizeof countMap);
+    memset(trie, 0, sizeof trie);
+    for (int i = 0; i < wordsSize; i++) {
+        int node = 0;
+        for (int j = 0; j < wordLen; j++) {
+            char next = words[i][j] - 'a';
+            if (trie[node][next] == 0) trie[node][next] = trieLen++;
+            node = trie[node][next];
+        }
+        if (countMap[node] == 0) countMap[node] = ++nwords;
+        counts[countMap[node]]++;
+    }
+    int* res = (int*) malloc(sLen * sizeof(int));
+    int resLen = 0;
+    int matches[sLen / wordLen + 1], windowCounts[nwords + 1];
+    for (int i = 0; i < wordLen; i++) {
+        if (i + wordLen * wordsSize > sLen) continue;
+        memset(windowCounts, 0, sizeof windowCounts);
+        int hits = 0, misses = 0;
+        for (int j = i, k = 0, l = 0; j + wordLen <= sLen; j += wordLen, k++) {
+            int node = 0;
+            for (int m = j; m < j + wordLen; m++) {
+                node = trie[node][s[m] - 'a'];
+                if (node == 0) { misses++; matches[k] = -1; break; }
+            }
+            if (node != 0) {
+                int countIdx = countMap[node];
+                matches[k] = countIdx;
+                windowCounts[countIdx]++;
+                if (windowCounts[countIdx] == counts[countIdx]) hits++;
+                else while (windowCounts[countIdx] > counts[countIdx]) {
+                    int leftIdx = matches[l++];
+                    if (leftIdx == -1) misses--;
+                    else {
+                        if (windowCounts[leftIdx] == counts[leftIdx]) hits--;
+                        windowCounts[leftIdx]--;
+                    }
+                }
+            }
+            while (l <= k && matches[l] == -1) { l++; misses--; }
+            if (hits == nwords && misses == 0) res[resLen++] = i + l * wordLen;
+        }
+    }
+    *returnSize = resLen;
+    return res;
+}
