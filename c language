@@ -1,0 +1,370 @@
+//two sum
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    for (int i = 0; i < numsSize; i++) {
+        for (int j = i + 1; j < numsSize; j++) {
+            if (nums[j] == target - nums[i]) {
+                int* result = malloc(sizeof(int) * 2);
+                result[0] = i;
+                result[1] = j;
+                *returnSize = 2;
+                return result;
+            }
+        }
+    }
+    // Return an empty array if no solution is found
+    *returnSize = 0;
+    return malloc(sizeof(int) * 0);
+}
+
+//
+                 struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
+    struct ListNode* listHead = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* listTail = listHead;
+    listTail->val = 0;
+
+    
+    while (true) {
+        int val = (l1 ? l1->val: 0) + (l2 ? l2->val: 0) + listTail->val;
+
+        listTail->val = val % 10;
+        
+        l1 = l1 ? l1->next : NULL;
+        l2 = l2 ? l2->next : NULL;
+        
+        if (l1 || l2 || val/10) {
+            listTail->next = (struct ListNode*)malloc(sizeof(struct ListNode));
+            listTail->next->val = val/10;
+            listTail = listTail->next;
+            
+        }
+        else {
+            listTail->next = NULL;
+            return listHead;
+        }
+    }
+}
+  //reverse integer
+                 #include<math.h>
+long int reverse(long int x)
+{
+    long int i,r=0,d;
+    if(x<INT_MIN||x>INT_MAX) 
+    {
+        return 0;
+    }
+    else
+    {
+       if(x>0)
+       {
+            while(x>0)
+            {
+                d=x%10;
+                r=r*10+d;
+                x=x/10;
+            }
+             if(r<INT_MIN||r>INT_MAX)
+            {
+                return 0;
+            }
+            return r;
+
+       }else if(x<0)
+       {
+            x=x*-1;
+             while(x>0)
+            {
+                d=x%10;
+                r=r*10+d;
+                x=x/10;
+            }
+            if(r<INT_MIN||r>INT_MAX)
+            {
+                return 0;
+            }
+            return -r;
+
+       }
+       else
+       {
+            return 0;
+       }
+        
+        
+    }
+   
+}
+                 //string to integer
+
+                 int myAtoi(char * s){
+    printf("%ld",strtol(s,NULL,10));
+    if(strtol(s,NULL,10)>2147483647){
+        return(2147483647);
+    }
+    else if(strtol(s,NULL,10)<=-2147483648){
+        printf("Thiss is the case");
+        return(-2147483648);
+    }
+    else{
+        return(strtol(s,NULL,10));
+    }
+}
+
+                 //palindrome number
+  
+  bool isPalindrome(int x) {
+
+     double rev=0, rem, orignal=x;
+    
+    
+        while(x>0)
+        {
+            rem = x % 10;
+            rev = rev * 10 + rem;
+            x/=10;
+        }
+
+        if(rev == orignal)
+            return true;
+        
+         else
+       return false;
+    
+}
+                 \\roman to integer
+                 int romanToInt(char * s)
+{
+    int t['X' + 1] = {
+        ['I'] = 1,
+        ['V'] = 5,
+        ['X'] = 10,
+        ['L'] = 50,
+        ['C'] = 100,
+        ['D'] = 500,
+        ['M'] = 1000,
+    };
+    int res = 0;
+    for (int i = 0; s[i]; i++) {
+        if (t[s[i]] < t[s[i+1]])
+            res -= t[s[i]];
+        else
+            res += t[s[i]];
+    }
+    return res;
+}
+             \\longest common prefix
+             #include <stdio.h>
+#include <stdlib.h>
+
+char* longestCommonPrefix(char** strs, int strsSize) {
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    char* w = malloc(sizeof(char) * 200); // Allocating space for the result
+    if (w == NULL) return NULL; // Check for memory allocation failure
+    w[0] = '\0'; // Initialize the result string
+
+    char* ptr = strs[0]; // Reference to the first string
+    while (ptr[j] != '\0') { // Iterate through characters of the first string
+        for (i = 1; i < strsSize; i++) {
+            if (strs[i][j] != ptr[j]) { // Check for mismatch
+                w[k] = '\0'; // Null terminate the string
+                return w; // Return the common prefix found so far
+            }
+        }
+        w[k++] = ptr[j]; // Add the matching character to the result
+        j++; // Move to the next character
+    }
+
+    w[k] = '\0'; // Null terminate the final result
+    return w; // Return the common prefix
+}
+\\3sum
+               #include <stdlib.h>
+
+int cmp(const void *a,const void *b) {
+    return *((int*) a) - *((int*) b);
+}
+
+int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes){
+    qsort(nums, numsSize, sizeof(int), cmp);
+    (*returnSize) = 0;
+    (*returnColumnSizes) = (int*) malloc(sizeof(int) * numsSize * numsSize);
+    int **ret = (int**) malloc(sizeof(int*) * numsSize * numsSize);
+    for (int i = 0; i < numsSize - 2; i++) {
+        if (i == 0 || nums[i] != nums[i-1]) {
+            int l = i + 1;
+            int r = numsSize - 1;
+            while (l < r) {
+                if (nums[i] + nums[l] + nums[r] < 0) {
+                    l++;
+                } else if (nums[i] + nums[l] + nums[r] > 0) {
+                    r--;
+                } else {
+                    ret[(*returnSize)] = (int*) malloc(sizeof(int) * 3);
+                    (*returnColumnSizes)[(*returnSize)] = 3;
+                    ret[(*returnSize)][0] = nums[i];
+                    ret[(*returnSize)][1] = nums[l];
+                    ret[(*returnSize)][2] = nums[r];
+                    (*returnSize)++;
+                    l++;
+                    while (l < r && nums[l] == nums[l-1])
+                        l++;
+                }
+            }
+        }
+    }
+    return ret;
+}
+             \\3 sum closest
+int compare(const void *a, const void *b){
+  return *(int*)a - *(int*)b;
+}
+int threeSumClosest(int* nums, int numsSize, int target){
+  int result = nums[0] + nums[1] + nums[2];
+  int limit = numsSize - 1, second, third, dis = abs(result - target), temp1, temp2;
+  
+  qsort(nums, numsSize, sizeof(int), compare);
+  for(int first = 0; first < limit; first++){
+    second = first + 1;
+    third = limit;
+    while(second < third){
+      temp1 = nums[first] + nums[second] + nums[third];
+      temp2 = abs(temp1 - target);
+      if (temp2 < dis) {
+        dis = temp2;
+        result = temp1;
+      }
+      if (result == target) return result;
+      else if (temp1 > target) third--;
+      else if (temp1 < target) second++;
+    }
+  }
+  return result;
+}
+          \\valid parentheses
+          #include<stdbool.h>
+#include <string.h>
+
+bool isValid(char* s) {
+    int n = strlen(s);
+    char stack[n];
+    int top = -1;
+    int i = 0;
+    while (i < n)
+    {
+        char c = s[i];
+        if (c == '(' || c == '{' || c == '[')
+            stack[++top] = c;
+        else
+        {
+            if (top == -1)
+                return false;
+            char topChar = stack[top--];
+            if ((c == ')' && topChar != '(') || 
+                (c == '}' && topChar != '{') ||
+                (c == ']' && topChar != '['))
+                return false;
+        }
+        i++;
+    }
+    return top == -1;
+}
+                                           
+\\merge two sorted lists
+                                           void insert (struct ListNode** head,int num){
+    struct ListNode* new = (struct ListNode*)malloc(sizeof(struct ListNode));
+    new->val = num;
+    new->next = NULL;
+
+    if(*head == NULL){
+        *head = new;
+    }else{
+        struct ListNode* temp = *head;
+        while(temp->next != NULL){
+            temp =temp->next;
+        }
+        temp->next = new;
+    }
+}
+
+struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
+    struct ListNode* head = NULL;
+    while(list1 != NULL && list2 != NULL){
+        if(list1->val < list2->val){
+            insert(&head,list1->val);
+            list1 = list1->next;
+        }else{
+            insert(&head,list2->val);
+            list2 = list2->next;
+        }
+    }
+    while(list1 != NULL){
+        insert(&head,list1->val);
+        list1 = list1->next;
+    }
+    while(list2 != NULL){
+        insert(&head,list2->val);
+        list2 = list2->next;
+    }
+
+    return head;
+}
+                                        //remove duplicates from sorted array
+                                           int removeDuplicates(int* nums, int numsSize) {
+    
+long int i , j = 0  ;
+    if(nums == NULL && numsSize == 0){
+        return 0;
+    }
+    for(i=1;i<numsSize;i++){
+        if(nums[i] != nums[j]){
+            j++;
+            nums[j] = nums[i];
+          
+        }
+    }
+    return j + 1;
+    }
+        //remove element
+  int removeElement(int* a, int n, int val) {
+    
+int c=0,t;
+    for(int i=0;i<n;i++){
+        if(a[i]==val){
+            c++;
+        }
+        else{a[i-c]=a[i];}}
+        return (n-c);
+}
+      //find the index of first occurence in a string
+            int strStr(char* haystack, char* needle) {
+    
+int index = 0; // Storing first occurence index
+
+    for (int i = 0, j = 0, len_haystack = strlen(haystack), len_needle = strlen(needle); i < len_haystack; i++)
+    {
+        if (haystack[i] == needle[0])
+        {
+            index = i; // Needle first occured on ith index in haystack
+            while (j < len_needle)
+            {
+                if (haystack[i] != needle[j])
+                {
+                    i = index; // To again compare haystack[i] with needle[0]
+                    j = 0; // Returning to needle[0]
+                    break;
+                }
+                i++;
+                j++;
+            }
+            if (j == len_needle)
+                return index;
+        }
+    }
+    
+    return -1;
+}
+                 
+                 
+          
+                 
